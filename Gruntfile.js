@@ -411,10 +411,13 @@ module.exports = function (grunt) {
   // refreshes, but at this time you would need to re-run the emulator to see changes.
   grunt.registerTask('ripple', ['wiredep', 'newer:copy:app', 'ripple-emulator']);
   grunt.registerTask('ripple-emulator', function () {
+
+    //grunt.config('concurrent.ionic.tasks', ['ionic:prepare:' + this.args.join(), 'watch']);
+
     grunt.config.set('watch', {
       all: {
         files: _.flatten(_.pluck(grunt.config.get('watch'), 'files')),
-        tasks: ['newer:copy:app', 'prepare']
+        tasks: ['newer:copy:app', 'concurrent:ionic']
       }
     });
 
@@ -525,3 +528,4 @@ module.exports = function (grunt) {
     'compress'
   ]);
 };
+
