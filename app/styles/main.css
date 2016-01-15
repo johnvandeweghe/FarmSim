@@ -1,1 +1,5 @@
 /* Your application styles go here */
+html, body {
+    width: 100%;
+    height: 100%;
+}

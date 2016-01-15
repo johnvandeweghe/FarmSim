@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('farmsim', ['ionic', 'farmsim.controllers'])
+angular.module('farmsim', ['ionic', 'farmsim.controllers', 'farmsim.services', 'farmsim.directives'])
 
 .config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
@@ -16,7 +16,8 @@ angular.module('farmsim', ['ionic', 'farmsim.controllers'])
     })
     .state('farm', {
         url: '/farm',
-        templateUrl: 'templates/farm.html'
+        templateUrl: 'templates/farm.html',
+        controller: 'farmCtrl'
     });
 })
 .run(function($ionicPlatform) {
@@ -36,3 +37,7 @@ angular.module('farmsim', ['ionic', 'farmsim.controllers'])
         }
     });
 });
+
+angular.module('farmsim.controllers', ['ionic']);
+angular.module('farmsim.services', []);
+angular.module('farmsim.directives', []);
