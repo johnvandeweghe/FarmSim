@@ -7,11 +7,11 @@ var Map = function(tiles, tilesize){
     this.draw = function(ctx, cameraPosition){
         var startY = Math.floor(cameraPosition.y/tilesize);
         var startX = Math.floor(cameraPosition.x/tilesize);
-        var endY = startY + Math.ceil(ctx.canvas.height/tilesize);
-        var endX = startX + Math.ceil(ctx.canvas.width/tilesize);
+        var endY = Math.min(startY + Math.ceil(ctx.canvas.height/tilesize), tiles.length-1);
+        var endX = Math.min(startX + Math.ceil(ctx.canvas.width/tilesize), tiles[0].length-1);
         for(var y = startY; y <= endY; y++){
             for(var x = startX; x <= endX; x++){
-                ctx.drawImage(sprites, (tiles[y][x].type % 8) * tilesize, Math.floor(tiles[y][x].type / 8) * tilesize, tilesize, tilesize, x * tilesize - cameraPosition.x, y*tilesize - cameraPosition.y, tilesize, tilesize);
+                ctx.drawImage(sprites, (tiles[y][x].type % 8) * tilesize, Math.floor(tiles[y][x].type / 8) * tilesize, tilesize, tilesize, Math.round(x * tilesize - cameraPosition.x), Math.round(y*tilesize - cameraPosition.y), tilesize, tilesize);
             }
         }
     };
