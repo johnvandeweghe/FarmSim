@@ -2,75 +2,44 @@ angular.module('farmsim.controllers')
     .controller('farmCtrl', ['$scope', 'MapService', function($scope, MapService){
         $scope.map = MapService.load();
 
-        $scope.cameraPosition = {
-            x: 0,
-            y: 0
-        };
-
-        $scope.momentum = null;
+        $scope.camera = new Camera();
 
         var touching = null;
 
-        var touchStartPos = {};
+        var touchStartPos = null;
 
-        var touchLastPos = {};
+        var touchLastPos = null;
         var touchLastTime = 0;
-        var touchVelocity = {};
+        var touchVelocity = null;
 
-        var originalCameraPosition = $scope.cameraPosition;
+        var originalCameraPosition = null;
 
         $scope.$on('farmsim.touchstart', function(e, touchEvent) {
-            var pos = {
-                x: touchEvent.changedTouches[0].pageX,
-                y: touchEvent.changedTouches[0].pageY
-            };
+            touchStartPos = new THREE.Vector2(touchEvent.changedTouches[0].pageX, touchEvent.changedTouches[0].pageY);
 
-            if($scope.momentum){
-                $scope.momentum = null;
-            }
+            $scope.camera.stopMomentum();
 
-            touching = getAtPos(pos);
-            touchStartPos = pos;
-            originalCameraPosition = $scope.cameraPosition;
+            touching = getAtPos(touchStartPos);
+            originalCameraPosition = $scope.camera.position.clone();
         });
         $scope.$on('farmsim.touchmove', function(e, touchEvent) {
             for(var t in touchEvent.changedTouches) {
-                var x = touchEvent.changedTouches[t].pageX;
-                if(x) {
+                if(touchEvent.changedTouches[t].pageX) {
+                    var pos = new THREE.Vector2(touchEvent.changedTouches[t].pageX, touchEvent.changedTouches[t].pageY);
                     switch(touching){
                         case $scope.map:
-                            var newX = originalCameraPosition.x + touchStartPos.x - x;
-                            var newY = originalCameraPosition.y + touchStartPos.y - touchEvent.changedTouches[t].pageY;
+                            var newPosition = originalCameraPosition.clone().add(touchStartPos).sub(pos);
 
                             var now = performance.now();
 
-                            if(now - touchLastTime) {
-                                touchVelocity = {
-                                    x: (touchLastPos.x - x) / (now - touchLastTime),
-                                    y: (touchLastPos.y - touchEvent.changedTouches[t].pageY) / (now - touchLastTime)
-                                };
+                            if(now - touchLastTime && touchLastPos) {
+                                touchVelocity = touchLastPos.sub(pos).divideScalar(now - touchLastTime);
                             }
 
-                            touchLastPos = {x: x, y: touchEvent.changedTouches[t].pageY};
+                            touchLastPos = pos.clone();
                             touchLastTime = now;
 
-                            if(newX < 0) {
-                                newX = 0;
-                            }
-                            if(newY < 0) {
-                                newY = 0;
-                            }
-                            if(newX > $scope.map.width - window.innerWidth){
-                                newX = $scope.map.width - window.innerWidth;
-                            }
-                            if(newY > $scope.map.height - window.innerHeight){
-                                newY = $scope.map.height - window.innerHeight;
-                            }
-
-                            $scope.cameraPosition = {
-                                x: newX,
-                                y: newY
-                            };
+                            $scope.camera.moveTo(newPosition, $scope.map);
                     }
                 }
             }
@@ -78,23 +47,15 @@ angular.module('farmsim.controllers')
         $scope.$on('farmsim.touchend', function(e, touchEvent) {
             switch(touching){
                 case $scope.map:
-                    originalCameraPosition = $scope.cameraPosition;
+                    originalCameraPosition = $scope.camera.position.clone();
 
-                    var momentum = {};
-                    momentum.amplitude = {
-                        x: touchVelocity.x * 100,
-                        y: touchVelocity.y * 100
-                    };// * scaleFactor;
-                    momentum.targetPosition = {
-                        x: $scope.cameraPosition.x + momentum.amplitude.x,
-                        y: $scope.cameraPosition.y + momentum.amplitude.y
-                    };
+                    if(touchVelocity) {
+                        $scope.camera.calculateMomentum(touchVelocity);
+                    }
 
-                    $scope.momentum = momentum;
-
-                    touchLastPos = {};
+                    touchLastPos = null;
                     touchLastTime = 0;
-                    touchVelocity = {};
+                    touchVelocity = null;
             }
             touching = null;
             touchStartPos = null;
