@@ -33,7 +33,12 @@ angular.module('farmsim.controllers')
                             var now = performance.now();
 
                             if(now - touchLastTime && touchLastPos) {
-                                touchVelocity = touchLastPos.sub(pos).divideScalar(now - touchLastTime);
+                                var currentVelocity = touchLastPos.sub(pos).divideScalar(now - touchLastTime);
+                                if(touchVelocity) {
+                                    touchVelocity.add(currentVelocity).divideScalar(2);
+                                } else {
+                                    touchVelocity = currentVelocity;
+                                }
                             }
 
                             touchLastPos = pos.clone();
