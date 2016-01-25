@@ -28,6 +28,12 @@ angular.module('farmsim.directives').
                     $scope.map.tick();
                     $scope.map.draw(ctx, $scope.camera);
 
+                    for(var dot in $scope.debugDots){
+                        if(!$scope.debugDots[dot].draw.apply($scope.debugDots[dot], [ctx, timestamp])){
+                            $scope.debugDots.splice(dot, 1);
+                        }
+                    }
+
                     //Todo, only request animation frames on change to drawn stuff?
                     window.requestAnimationFrame(step);
                 }
