@@ -62,23 +62,8 @@ angular.module('farmsim.controllers')
         $scope.$on('farmsim.touchend', function(e, touchEvent) {
             var pos = new THREE.Vector2(touchEvent.changedTouches[0].pageX, touchEvent.changedTouches[0].pageY);
             if(tapped) {
-                $scope.debugDots.push({
-                    position: pos,
-                    timeLeft: 10000,
-                    startTime: performance.now(),
-                    draw: function(ctx, time){
-                        var elapsed = time - this.startTime;
-                        this.timeLeft-=elapsed;
-
-                        ctx.beginPath();
-                        ctx.arc(this.position.x, this.position.y, 10, 0, 2 * Math.PI, false);
-                        ctx.closePath();
-                        ctx.fillStyle = 'blue';
-                        ctx.fill();
-
-                        return this.timeLeft > 0;
-                    }
-                })
+                var tile = $scope.map.getTileAt(pos.clone().add($scope.camera.position));
+                tile.tap($scope, pos);
             } else {
                 switch (touching) {
                     case $scope.map:
