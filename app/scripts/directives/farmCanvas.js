@@ -25,7 +25,7 @@ angular.module('farmsim.directives').
 
                     $scope.camera.tick(timestamp, $scope.map);
 
-                    $scope.map.tick();
+                    $scope.map.tick(timestamp);
                     $scope.map.draw(ctx, $scope.camera);
 
                     for(var dot in $scope.debugDots){

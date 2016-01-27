@@ -2,6 +2,10 @@ angular.module('farmsim.controllers')
     .controller('farmCtrl', ['$scope', 'MapService', function($scope, MapService){
         $scope.map = MapService.load();
 
+        setInterval(function(){
+            MapService.save($scope.map)
+        }, 10000);
+
         $scope.camera = new Camera();
 
         $scope.debugDots = [];
