@@ -10,7 +10,15 @@ angular.module('farmsim.services')
                             tiles[y][x] = ms.getTile(tiles[y][x].type, tiles[y][x].data);
                         }
                     }
-                    return new Map(tiles, 32);
+
+                    var entities = localStorage.getItem('farmEntities');
+
+                    entities = JSON.parse(entities) || [];
+                    for(var i in entities){
+                        entities[i] = ms.getEntity(entities[i].type, entities[i].data);
+                    }
+
+                    return new Map(tiles, 32, entities);
                 } else {
                     return this.newMap();
                 }
@@ -28,6 +36,16 @@ angular.module('farmsim.services')
                     }
                 }
                 localStorage.setItem('farmTiles', JSON.stringify(notTiles));
+
+                var entities = map.getEntities();
+                var notEntities = [];
+                for(var i in entities){
+                    notEntities[i] = {
+                        type: entities[i].type,
+                        data: entities[i].export()
+                    };
+                }
+                localStorage.setItem('farmEntities', JSON.stringify(notEntities));
             },
             newMap: function(){
                 var blankRow = function() {
@@ -162,7 +180,7 @@ angular.module('farmsim.services')
                     blankRow()
                 ];
 
-                return new Map(tiles, 32);
+                return new Map(tiles, 32, []);
             },
             getTile: function(type, data){
                 data = data || {};
@@ -187,6 +205,14 @@ angular.module('farmsim.services')
                         return new PlotTile(type, data.state || 0, data.stateChangeTime || 0);
                     default:
                         return new Tile(type, data.state || 0);
+                }
+            },
+            getEntity: function(type, data){
+                data = data || {};
+                switch(type){
+                    case 0:
+                    default:
+                        return new Entity(type, new THREE.Vector2(data.position.x || 0, data.position.y || 0));
                 }
             }
         };

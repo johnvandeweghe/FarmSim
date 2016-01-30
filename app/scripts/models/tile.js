@@ -5,21 +5,15 @@ var Tile = function(type, state){
 
 Tile.prototype.constructor = Tile;
 
-Tile.prototype.tick = function(timestamp){
+Tile.prototype.tick = function(timestamp, map){
 
 };
 
 Tile.prototype.draw = function(ctx, x, y, tilesize, sprites) {
-    if (this.state == 0) {
-        ctx.drawImage(sprites, (this.type % 8) * tilesize, Math.floor(this.type / 8) * tilesize, tilesize, tilesize, x, y, tilesize, tilesize);
-    } else {
-        ctx.fillStyle = "red";
-        ctx.fillRect(x,y,tilesize,tilesize);
-    }
+    ctx.drawImage(sprites, (this.type % 8) * tilesize, Math.floor(this.type / 8) * tilesize, tilesize, tilesize, x, y, tilesize, tilesize);
 };
 
-Tile.prototype.tap = function($scope, position){
-    this.state = +!this.state;
+Tile.prototype.tap = function($scope, position, mapService){
     $scope.debugDots.push({
         position: position,
         timeLeft: 10000,

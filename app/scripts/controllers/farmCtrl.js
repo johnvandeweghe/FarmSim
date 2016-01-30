@@ -66,8 +66,9 @@ angular.module('farmsim.controllers')
         $scope.$on('farmsim.touchend', function(e, touchEvent) {
             var pos = new THREE.Vector2(touchEvent.changedTouches[0].pageX, touchEvent.changedTouches[0].pageY);
             if(tapped) {
-                var tile = $scope.map.getTileAt(pos.clone().add($scope.camera.position));
-                tile.tap($scope, pos);
+                var absolutePos = pos.clone().add($scope.camera.position);
+                var tile = $scope.map.getTileAt(absolutePos);
+                tile.tap($scope, absolutePos, MapService);
             } else {
                 switch (touching) {
                     case $scope.map:
