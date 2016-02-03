@@ -55,5 +55,8 @@
     "com.ionic.keyboard",
     "org.apache.cordova.device-motion",
     "org.apache.cordova.geolocation"
+  ],
+  "cordovaPlatforms": [
+    "android"
   ]
 }
