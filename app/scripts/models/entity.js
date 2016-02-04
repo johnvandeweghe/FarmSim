@@ -11,11 +11,11 @@ Entity.prototype.tick = function(timestamp, map){
 };
 
 Entity.prototype.draw = function(ctx, tilesize, sprites, camera) {
-    ctx.drawImage(sprites, (this.type % 8) * tilesize, Math.floor(this.type / 8) * tilesize, tilesize, tilesize, this.position.x - camera.position.x, this.position.y - camera.position.y, tilesize, tilesize);
+    ctx.drawImage(sprites, (this.type % 8) * tilesize, Math.floor(this.type / 8) * tilesize, tilesize, tilesize, this.position.x - camera.position.x - Math.floor(tilesize/2), this.position.y - camera.position.y - Math.floor(tilesize/2), tilesize, tilesize);
 };
 
 Entity.prototype.tap = function($scope, position, mapService){
-
+    return false;
 };
 
 Entity.prototype.export = function(){

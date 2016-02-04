@@ -13,18 +13,26 @@ PlotTile.prototype.draw = function(ctx, x, y, tilesize, sprites) {
 };
 
 PlotTile.prototype.tap = function($scope, position, mapService){
-    if(this.state == 0) {
-        var tileTopLeft = position.clone().divideScalar($scope.map.getTilesize()).floor().multiplyScalar($scope.map.getTilesize());
-        if ($scope.map.findEntitiesAt(tileTopLeft, $scope.map.getTilesize()/2).length == 0) {
-            var newEntity = mapService.getEntity(0, {
-                position: {
-                    x: tileTopLeft.x,
-                    y: tileTopLeft.y
-                }
-            });
-            $scope.map.addEntity(newEntity);
-        } else {
-            this.stateChangeTime = Date.now() + 60 * 1000;
+    var tileCenter = $scope.map.roundToTileCenter(position);
+    var entities = $scope.map.findEntitiesAt(tileCenter, $scope.map.getTilesize()/2);
+    if(entities.length == 0){
+        var newEntity = mapService.getEntity(0, {
+            position: {
+                x: tileCenter.x,
+                y: tileCenter.y
+            }
+        });
+        $scope.map.addEntity(newEntity);
+    } else {
+        var entitiesDidAnything = false;
+        for(var e in entities){
+            if(entities[e].tap($scope, position, mapService)){
+                entitiesDidAnything = true;
+                break;
+            }
+        }
+        if(this.state == 0 && !entitiesDidAnything) {
+            this.stateChangeTime = Date.now() + this.getWaterTime();
             this.state = 1;
             switch (this.type) {
                 case 0:
@@ -94,7 +102,9 @@ PlotTile.prototype.tick = function(timestamp, map){
     }
 };
 
-
+PlotTile.prototype.getWaterTime = function(){
+    return 1000 * (30 + Math.round(Math.random() * 30));
+};
 
 PlotTile.prototype.export = function(){
     return {

@@ -69,6 +69,10 @@ angular.module('farmsim.controllers')
                 var absolutePos = pos.clone().add($scope.camera.position);
                 var tile = $scope.map.getTileAt(absolutePos);
                 tile.tap($scope, absolutePos, MapService);
+                var entities = $scope.map.findEntitiesAt(absolutePos, $scope.map.getTilesize()/2);
+                for(var e in entities){
+                    entities[e].tap($scope, absolutePos, MapService);
+                }
             } else {
                 switch (touching) {
                     case $scope.map:

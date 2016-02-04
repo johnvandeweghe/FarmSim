@@ -69,5 +69,16 @@ var Map = function(tiles, tilesize, entities){
 
     this.addEntity = function(entity){
         entities.push(entity);
+    };
+
+    this.removeEntity = function(entity){
+        var index = entities.indexOf(entity);
+        if(index > -1) {
+            entities.splice(index, 1);
+        }
+    };
+
+    this.roundToTileCenter = function(position){
+       return position.clone().divideScalar(this.getTilesize()).floor().multiplyScalar(this.getTilesize()).addScalar(this.getTilesize()/2);
     }
 };
