@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.example.Farmsim" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.lunixlabs.Farmsim" version="0.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Farmsim</name>
   <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        A farming simulator
     </description>
-  <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+  <author email="vandeweghe@lunixlabs.com" href="http://lunixlabs.com">
+        John VanDeWeghe
     </author>
   <content src="index.html"/>
   <access origin="*"/>

@@ -15,14 +15,11 @@ PlantEntity.prototype.tick = function(timestamp, map){
         this.applyGrowthRateChange(tile.state == 0 ? -0.2 : 0.2);
         this.watered = !this.watered;
     }
-    if(this.state == 0 && this.growthTime < Date.now()){
-        this.state = 1;
-        switch(this.type){
-            case 0:
-                this.type = 1;
-                this.growthTime = Date.now() + this.getGrowthTime(this.type, this.state);
-                break;
-        }
+    if(this.state < 4 && this.growthTime < Date.now()){
+        this.state++;
+        this.type++;
+        this.growthTime = Date.now() + this.getGrowthTime(this.type, this.state);
+        this.watered = false;
     }
 };
 
@@ -31,7 +28,7 @@ PlantEntity.prototype.draw = function(ctx, tilesize, sprites, camera) {
 };
 
 PlantEntity.prototype.tap = function($scope, position, mapService){
-    if(this.state == 1){
+    if(this.state == 4){
         //add this to inv
         $scope.map.removeEntity(this);
         return true;
