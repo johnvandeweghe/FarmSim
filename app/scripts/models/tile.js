@@ -37,3 +37,29 @@ Tile.prototype.export = function(){
         state: this.state
     };
 };
+
+Tile.getTile = function(type, data){
+    data = data || {};
+    switch(type){
+        case 0:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 16:
+        case 17:
+        case 18:
+        case 19:
+        case 20:
+        case 21:
+            return new PlotTile(type, data.state || 0, data.stateChangeTime || 0);
+        default:
+            return new Tile(type, data.state || 0);
+    }
+};

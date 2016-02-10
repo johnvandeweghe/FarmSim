@@ -82,3 +82,187 @@ var Map = function(tiles, tilesize, entities){
        return position.clone().divideScalar(this.getTilesize()).floor().multiplyScalar(this.getTilesize()).addScalar(this.getTilesize()/2);
     }
 };
+
+Map.load = function() {
+    var tiles = localStorage.getItem('farmTiles');
+    if(tiles) {
+        tiles = JSON.parse(tiles);
+        for(var y in tiles){
+            for(var x in tiles[y]) {
+                tiles[y][x] = Tile.getTile(tiles[y][x].type, tiles[y][x].data);
+            }
+        }
+
+        var entities = localStorage.getItem('farmEntities');
+
+        entities = JSON.parse(entities) || [];
+        for(var i in entities){
+            entities[i] = Entity.getEntity(entities[i].type, entities[i].data);
+        }
+
+        return new Map(tiles, 32, entities);
+    } else {
+        return this.newMap();
+    }
+};
+
+Map.save = function(map) {
+    var tiles = map.getTiles();
+    var notTiles = [];
+    for(var y in tiles){
+        notTiles[y] = [];
+        for(var x in tiles[y]) {
+            notTiles[y][x] = {
+                type: tiles[y][x].type,
+                data: tiles[y][x].export()
+            };
+        }
+    }
+    localStorage.setItem('farmTiles', JSON.stringify(notTiles));
+
+    var entities = map.getEntities();
+    var notEntities = [];
+    for(var i in entities){
+        notEntities[i] = {
+            type: entities[i].type,
+            data: entities[i].export()
+        };
+    }
+    localStorage.setItem('farmEntities', JSON.stringify(notEntities));
+};
+
+Map.newMap = function(){
+    var blankRow = function() {
+        return [
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2),
+            Tile.getTile(2)
+        ];
+    };
+    var topRow = function(){
+        return [
+            Tile.getTile(2),
+            Tile.getTile(6),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(5),
+            Tile.getTile(9),
+            Tile.getTile(2)
+        ];
+    };
+    var middleRow = function() {
+        return [
+            Tile.getTile(2),
+            Tile.getTile(14),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(0),
+            Tile.getTile(12),
+            Tile.getTile(2)
+        ];
+    };
+    var bottomRow = function() {
+        return [
+            Tile.getTile(2),
+            Tile.getTile(11),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(13),
+            Tile.getTile(10),
+            Tile.getTile(2)
+        ];
+    };
+
+    var tiles = [
+        blankRow(),
+        topRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        middleRow(),
+        bottomRow(),
+        blankRow()
+    ];
+
+    return new Map(tiles, 32, []);
+};
