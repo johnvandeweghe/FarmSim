@@ -1,9 +1,9 @@
 angular.module('farmsim.controllers')
-    .controller('farmCtrl', ['$scope', 'MapService', function($scope, MapService){
-        $scope.map = MapService.load();
+    .controller('farmCtrl', ['$scope', function($scope){
+        $scope.map = Map.load();
 
         setInterval(function(){
-            MapService.save($scope.map)
+            Map.save($scope.map)
         }, 10000);
 
         $scope.camera = new Camera();
@@ -68,10 +68,10 @@ angular.module('farmsim.controllers')
             if(tapped) {
                 var absolutePos = pos.clone().add($scope.camera.position);
                 var tile = $scope.map.getTileAt(absolutePos);
-                tile.tap($scope, absolutePos, MapService);
+                tile.tap($scope, absolutePos);
                 var entities = $scope.map.findEntitiesAt(absolutePos, $scope.map.getTilesize()/2);
                 for(var e in entities){
-                    entities[e].tap($scope, absolutePos, MapService);
+                    entities[e].tap($scope, absolutePos);
                 }
             } else {
                 switch (touching) {

@@ -12,11 +12,11 @@ PlotTile.prototype.draw = function(ctx, x, y, tilesize, sprites) {
     ctx.drawImage(sprites, (this.type % 8) * tilesize, Math.floor(this.type / 8) * tilesize, tilesize, tilesize, x, y, tilesize, tilesize);
 };
 
-PlotTile.prototype.tap = function($scope, position, mapService){
+PlotTile.prototype.tap = function($scope, position){
     var tileCenter = $scope.map.roundToTileCenter(position);
     var entities = $scope.map.findEntitiesAt(tileCenter, $scope.map.getTilesize()/2);
     if(entities.length == 0){
-        var newEntity = mapService.getEntity(0, {
+        var newEntity = Entity.getEntity(0, {
             position: {
                 x: tileCenter.x,
                 y: tileCenter.y
@@ -26,7 +26,7 @@ PlotTile.prototype.tap = function($scope, position, mapService){
     } else {
         var entitiesDidAnything = false;
         for(var e in entities){
-            if(entities[e].tap($scope, position, mapService)){
+            if(entities[e].tap($scope, position)){
                 entitiesDidAnything = true;
                 break;
             }

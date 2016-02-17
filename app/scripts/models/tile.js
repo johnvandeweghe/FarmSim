@@ -13,7 +13,7 @@ Tile.prototype.draw = function(ctx, x, y, tilesize, sprites) {
     ctx.drawImage(sprites, (this.type % 8) * tilesize, Math.floor(this.type / 8) * tilesize, tilesize, tilesize, x, y, tilesize, tilesize);
 };
 
-Tile.prototype.tap = function($scope, position, mapService){
+Tile.prototype.tap = function($scope, position){
     $scope.debugDots.push({
         position: position,
         timeLeft: 10000,
