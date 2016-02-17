@@ -23,16 +23,8 @@ directive("farminventorycanvas", ['$compile', function($compile){
                 if (!start) start = timestamp;
                 var progress = timestamp - start;
 
-                $scope.camera.tick(timestamp, $scope.map);
-
-                $scope.map.tick(timestamp);
-                $scope.map.draw(ctx, $scope.camera);
-
-                for(var dot in $scope.debugDots){
-                    if(!$scope.debugDots[dot].draw.apply($scope.debugDots[dot], [ctx, timestamp])){
-                        $scope.debugDots.splice(dot, 1);
-                    }
-                }
+                $scope.inventoryService.tick(timestamp);
+                $scope.inventoryService.draw(ctx, timestamp);
 
                 //Todo, only request animation frames on change to drawn stuff?
                 window.requestAnimationFrame(step);

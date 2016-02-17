@@ -4,6 +4,11 @@ angular.module('farmsim.services')
         var height = 10;
         var inventoryContents = [];
 
+        var sprites = new Image;
+        sprites.src = "images/itemsprites.png";
+
+        var tilesize = 32;
+
         for(var row = 0; row < width; row++){
             inventoryContents[row] = [];
             for(var col = 0; col < height; col++){
@@ -62,5 +67,15 @@ angular.module('farmsim.services')
         this.resetSize = function(){
             width = 10;
             height = 10;
+        };
+
+        this.draw = function(ctx, progress){
+            for(var row = 0; row < width; row++){
+                var x = row * (tilesize + 10) + 10;
+                for(var col = 0; col < height; col++){
+                    var y = col * (tilesize + 10) + 10;
+                    inventoryContents[row][col].draw(ctx, x, y, tilesize, sprites);
+                }
+            }
         };
     });
