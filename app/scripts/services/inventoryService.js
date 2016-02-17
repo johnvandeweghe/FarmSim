@@ -69,12 +69,21 @@ angular.module('farmsim.services')
             height = 10;
         };
 
-        this.draw = function(ctx, progress){
+        this.draw = function(ctx){
+            var destinationTilesize = 32;
             for(var row = 0; row < width; row++){
                 var x = row * (tilesize + 10) + 10;
                 for(var col = 0; col < height; col++){
                     var y = col * (tilesize + 10) + 10;
-                    inventoryContents[row][col].draw(ctx, x, y, tilesize, sprites);
+                    inventoryContents[row][col].draw(ctx, x, y, destinationTilesize, destinationTilesize, tilesize, sprites);
+                }
+            }
+        };
+
+        this.tick = function(progress){
+            for(var row = 0; row < width; row++){
+                for(var col = 0; col < height; col++){
+                    inventoryContents[row][col].tick(progress);
                 }
             }
         };

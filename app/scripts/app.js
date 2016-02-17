@@ -18,6 +18,11 @@ angular.module('farmsim', ['ionic', 'farmsim.controllers', 'farmsim.services', '
         url: '/farm',
         templateUrl: 'templates/farm.html',
         controller: 'farmCtrl'
+    })
+    .state('inventory', {
+        url: '/inventory',
+        templateUrl: 'templates/inventory.html',
+        controller: 'inventoryCtrl'
     });
 })
 .run(function($ionicPlatform) {
