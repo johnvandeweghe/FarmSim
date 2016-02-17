@@ -45,7 +45,7 @@ var Map = function(tiles, tilesize, entities){
 
     this.getTilesize = function(){
         return tilesize;
-    }
+    };
 
     this.getEntities = function(){
         return entities;

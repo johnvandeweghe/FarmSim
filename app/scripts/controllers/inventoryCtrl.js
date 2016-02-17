@@ -1,4 +1,4 @@
 angular.module('farmsim.controllers')
-    .controller('inventoryCtrl', function($scope){
+    .controller('inventoryCtrl', ['$scope', 'InventoryService', function($scope, InventoryServicess){
 
-    });
+    }]);

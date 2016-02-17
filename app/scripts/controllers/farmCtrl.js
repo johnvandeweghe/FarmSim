@@ -1,5 +1,5 @@
 angular.module('farmsim.controllers')
-    .controller('farmCtrl', ['$scope', function($scope){
+    .controller('farmCtrl', ['$scope', 'InventoryService', function($scope, InventoryServicess){
         $scope.map = Map.load();
 
         setInterval(function(){

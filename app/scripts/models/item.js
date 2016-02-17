@@ -21,3 +21,7 @@ Item.prototype.export = function(){
         state: this.state
     };
 };
+
+Item.prototype.equal = function(item){
+    return item.type === this.type;
+};
