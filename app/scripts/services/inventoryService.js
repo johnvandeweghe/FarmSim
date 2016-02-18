@@ -36,7 +36,7 @@ angular.module('farmsim.services')
         this.find = function(item){
             for (var row in inventoryContents) {
                 for (var col in inventoryContents[row]) {
-                    if (inventoryContents[row][col].equal(item)) {
+                    if (inventoryContents[row][col] && inventoryContents[row][col].equal(item)) {
                         return inventoryContents[row][col];
                     }
                 }
@@ -73,9 +73,11 @@ angular.module('farmsim.services')
             var destinationTilesize = 32;
             for(var row = 0; row < width; row++){
                 var x = row * (tilesize + 10) + 10;
-                for(var col = 0; col < height; col++){
+                for(var col = 0; col < height; col++) {
                     var y = col * (tilesize + 10) + 10;
-                    inventoryContents[row][col].draw(ctx, x, y, destinationTilesize, destinationTilesize, tilesize, sprites);
+                    if (inventoryContents[row][col]) {
+                        inventoryContents[row][col].draw(ctx, x, y, destinationTilesize, destinationTilesize, tilesize, sprites);
+                    }
                 }
             }
         };
@@ -83,7 +85,9 @@ angular.module('farmsim.services')
         this.tick = function(progress){
             for(var row = 0; row < width; row++){
                 for(var col = 0; col < height; col++){
-                    inventoryContents[row][col].tick(progress);
+                    if(inventoryContents[row][col]) {
+                        inventoryContents[row][col].tick(progress);
+                    }
                 }
             }
         };

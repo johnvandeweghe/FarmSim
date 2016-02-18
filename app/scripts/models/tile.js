@@ -30,6 +30,7 @@ Tile.prototype.tap = function($scope, position){
             return this.timeLeft > 0;
         }
     });
+    window.location = "#inventory";
 };
 
 Tile.prototype.export = function(){

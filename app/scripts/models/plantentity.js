@@ -12,15 +12,23 @@ PlantEntity.prototype.constructor = PlantEntity;
 PlantEntity.prototype.tick = function(timestamp, map){
     var tile = map.getTileAt(this.position);
     if(tile.state == 0 && this.watered || tile.state == 1 && !this.watered) {
-        this.applyGrowthRateChange(tile.state == 0 ? -0.2 : 0.2);
         this.watered = !this.watered;
+        this.applyGrowthRateChange(this.watered ? -0.2 : 0.2);
     }
-    if(this.state < 4 && this.growthTime < Date.now()){
-        this.state++;
-        this.type++;
-        this.growthTime = Date.now() + this.getGrowthTime(this.type, this.state);
-        this.watered = false;
+    if(this.timeToGrow()){
+        this.grow();
     }
+};
+
+PlantEntity.prototype.timeToGrow = function(){
+    return this.state <= this.getMaxState() && this.growthTime < Date.now();
+};
+
+PlantEntity.prototype.grow = function(){
+    this.state++;
+    this.type++;
+    this.growthTime = Date.now() + this.getGrowthTime(this.type, this.state);
+    this.watered = false;
 };
 
 PlantEntity.prototype.draw = function(ctx, tilesize, sprites, camera) {
@@ -28,8 +36,9 @@ PlantEntity.prototype.draw = function(ctx, tilesize, sprites, camera) {
 };
 
 PlantEntity.prototype.tap = function($scope, position){
-    if(this.state == 4){
-        //add this to inv
+    if(this.state == this.getMaxState()){
+        var item = new Item(this.getItemType(), 1);
+        $scope.inventoryService.add(item);
         $scope.map.removeEntity(this);
         return true;
     }
@@ -48,6 +57,25 @@ PlantEntity.prototype.applyGrowthRateChange = function(rateChange){
 
 PlantEntity.prototype.getGrowthTime = function(type, state){
     return 1000 * (50 + Math.round(Math.random() * 10));
+};
+
+PlantEntity.prototype.getItemType = function(){
+    switch(this.type){
+        case 5:
+            return 0;
+    }
+};
+
+PlantEntity.prototype.getMaxState = function(){
+    return PlantEntity.getMaxState(this.type);
+};
+
+PlantEntity.getMaxState = function(type){
+    if(type <= 5){
+        return 4;
+    } else {
+        return 4;
+    }
 };
 
 PlantEntity.prototype.export = function(){

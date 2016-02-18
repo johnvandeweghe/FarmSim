@@ -1,5 +1,5 @@
 angular.module('farmsim.directives').
-directive("farminventorycanvas", ['$compile', function($compile){
+directive("inventorycanvas", ['$compile', function($compile){
     return {
         restrict: "A",
         link: function($scope, element){
