@@ -21,7 +21,7 @@ PlantEntity.prototype.tick = function(timestamp, map){
 };
 
 PlantEntity.prototype.timeToGrow = function(){
-    return this.state <= this.getMaxState() && this.growthTime < Date.now();
+    return this.state < this.getMaxState() && this.growthTime < Date.now();
 };
 
 PlantEntity.prototype.grow = function(){
@@ -36,7 +36,7 @@ PlantEntity.prototype.draw = function(ctx, tilesize, sprites, camera) {
 };
 
 PlantEntity.prototype.tap = function($scope, position){
-    if(this.state == this.getMaxState()){
+    if(this.state >= this.getMaxState()){
         var item = new Item(this.getItemType(), 1);
         $scope.inventoryService.add(item);
         $scope.map.removeEntity(this);
