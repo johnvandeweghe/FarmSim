@@ -1,7 +1,11 @@
-var PlantEntity = function(type, position, state, growthTime, watered){
+var PlantEntity = function(type, position, state, growthTimes, watered){
     Entity.prototype.constructor.apply(this, [type, position]);
     this.state = state;
-    this.growthTime = growthTime || Date.now() + this.getGrowthTime(type, state);
+    if(growthTimes.length == 0) {
+        this.growthTimes = this.buildGrowthTimes(type, state);
+    } else {
+        this.growthTimes = growthTimes
+    }
     this.watered = watered;
 };
 
@@ -15,20 +19,19 @@ PlantEntity.prototype.tick = function(timestamp, map){
         this.watered = !this.watered;
         this.applyGrowthRateChange(this.watered ? -0.2 : 0.2);
     }
-    if(this.timeToGrow()){
+    while(this.timeToGrow()){
         this.grow();
     }
 };
 
 PlantEntity.prototype.timeToGrow = function(){
-    return this.state <= this.getMaxState() && this.growthTime < Date.now();
+    return this.state <= this.getMaxState() && this.growthTimes.length != 0 && this.growthTimes[0] < Date.now();
 };
 
 PlantEntity.prototype.grow = function(){
     this.state++;
     this.type++;
-    this.growthTime = Date.now() + this.getGrowthTime(this.type, this.state);
-    this.watered = false;
+    this.growthTimes.shift();
 };
 
 PlantEntity.prototype.draw = function(ctx, tilesize, sprites, camera) {
@@ -47,12 +50,29 @@ PlantEntity.prototype.tap = function($scope, position){
 };
 
 PlantEntity.prototype.applyGrowthRateChange = function(rateChange){
-    var timeLeft = this.growthTime - Date.now();
-
-    if(timeLeft > 0 && rateChange != 0){
-        timeLeft *= 1 + -rateChange;
-        this.growthTime = Date.now() + timeLeft;
+    if(rateChange == 0){
+        return;
     }
+
+    for(var i in this.growthTimes) {
+        var timeLeft = this.growthTimes[i] - Date.now();
+
+        if (timeLeft > 0) {
+            timeLeft *= 1 + -rateChange;
+            this.growthTimes[i] = Date.now() + timeLeft;
+        }
+    }
+};
+
+PlantEntity.prototype.buildGrowthTimes = function(type, state){
+    var growthTimes = [];
+    var lastTime = Date.now();
+    for(var i = state; i < this.getMaxState(); i++){
+        var growTime = lastTime + this.getGrowthTime(type, i);
+        growthTimes.push(growTime);
+        lastTime = growTime;
+    }
+    return growthTimes;
 };
 
 PlantEntity.prototype.getGrowthTime = function(type, state){
@@ -85,7 +105,7 @@ PlantEntity.prototype.export = function(){
             y: this.position.y
         },
         state: this.state,
-        growthTime: this.growthTime,
+        growthTimes: this.growthTimes,
         watered: this.watered
     };
 };

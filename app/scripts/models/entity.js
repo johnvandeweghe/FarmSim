@@ -32,7 +32,7 @@ Entity.getEntity = function(type, data){
     switch(type){
         case 0:
         case 1:
-            return new PlantEntity(type, new THREE.Vector2(data.position.x || 0, data.position.y || 0), data.state || 0, data.growthTime || 0, data.watered || false);
+            return new PlantEntity(type, new THREE.Vector2(data.position.x || 0, data.position.y || 0), data.state || 0, data.growthTimes || [], data.watered || false);
         default:
             return new Entity(type, new THREE.Vector2(data.position.x || 0, data.position.y || 0));
     }
