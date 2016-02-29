@@ -69,17 +69,58 @@ angular.module('farmsim.services')
             height = 10;
         };
 
+        this.getTappableAt = function(windowWidth, windowHeight, position){
+            var destinationTilesize = this.getDestinationTileSize();
+            var padding = this.getItemPadding(windowWidth, windowHeight, destinationTilesize);
+
+            var column = (-padding.x + position.x)/(destinationTilesize+padding.x);
+            var row = (-padding.y + position.y)/(destinationTilesize+padding.y);
+
+            if(
+                column > Math.floor(column) + padding.x/destinationTilesize &&
+                row > Math.floor(row) + padding.y/destinationTilesize
+            ){
+                return;
+            }
+            row = Math.floor(row);
+            column = Math.floor(column);
+
+            console.log(row, column);
+            if(row == 0){
+                //window.location = "#farm";
+            } else {
+                row--;
+            }
+            return inventoryContents[row][column];
+        };
+
         this.draw = function(ctx){
-            var destinationTilesize = 32;
-            for(var row = 0; row < width; row++){
-                var x = row * (tilesize + 10) + 10;
-                for(var col = 0; col < height; col++) {
-                    var y = col * (tilesize + 10) + 10;
-                    if (inventoryContents[row][col]) {
-                        inventoryContents[row][col].draw(ctx, x, y, destinationTilesize, destinationTilesize, tilesize, sprites);
+            var destinationTilesize = this.getDestinationTileSize();
+            var padding = this.getItemPadding(ctx.canvas.width, ctx.canvas.height, destinationTilesize);
+            for(var col = 0; col < width; col++){
+                var x =  col * destinationTilesize + (col + 1) * padding.x;
+                for(var row = 0; row < height; row++) {
+                    var y = (row + 1) * destinationTilesize + (row + 2) * padding.y;
+
+                    if (inventoryContents[col][row]) {
+                        inventoryContents[col][row].draw(ctx, x, y, destinationTilesize, destinationTilesize, tilesize, sprites);
                     }
                 }
             }
+
+            ctx.fillStyle = "#444444";
+            ctx.fillRect(padding.x,padding.y,destinationTilesize,destinationTilesize);
+        };
+
+        this.getDestinationTileSize = function(){
+            return 32;
+        };
+
+        this.getItemPadding = function(cavnasWidth, canvasHeight, tilesize){
+            return new THREE.Vector2(
+                (cavnasWidth - width*tilesize) / (width + 1),
+                (canvasHeight - height*tilesize) / (height + 1)
+            );
         };
 
         this.tick = function(progress){
