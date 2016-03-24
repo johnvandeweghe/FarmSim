@@ -19,7 +19,7 @@ Item.prototype.draw = function(ctx, x, y, width, height, tilesize, sprites) {
 };
 
 Item.prototype.tap = function($scope, position){
-    this.quantity--;
+    
 };
 
 Item.prototype.export = function(){

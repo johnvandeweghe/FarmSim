@@ -44,6 +44,16 @@ angular.module('farmsim.services')
             return null;
         };
 
+        this.remove = function(item){
+            for (var row in inventoryContents) {
+                for (var col in inventoryContents[row]) {
+                    if (inventoryContents[row][col] && inventoryContents[row][col].equal(item)) {
+                        inventoryContents[row][col] = null;
+                    }
+                }
+            }
+        };
+
         this.findFirstSlot = function(){
             for(var row = 0; row < width; row++){
                 for(var col = 0; col < height; col++){
@@ -77,21 +87,20 @@ angular.module('farmsim.services')
             var row = (-padding.y + position.y)/(destinationTilesize+padding.y);
 
             if(
-                column > Math.floor(column) + padding.x/destinationTilesize &&
-                row > Math.floor(row) + padding.y/destinationTilesize
+                column > Math.floor(column) + destinationTilesize/(destinationTilesize+padding.x) ||
+                row > Math.floor(row) + destinationTilesize/(destinationTilesize+padding.y)
             ){
                 return;
             }
             row = Math.floor(row);
             column = Math.floor(column);
-
-            console.log(row, column);
             if(row == 0){
-                //window.location = "#farm";
+                window.location = "#farm";
+                return;
             } else {
                 row--;
+                return inventoryContents[row][column];
             }
-            return inventoryContents[row][column];
         };
 
         this.draw = function(ctx){
